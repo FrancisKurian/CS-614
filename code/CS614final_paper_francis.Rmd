@@ -1,0 +1,426 @@
+---
+title: Exploring the Relationship between Stock Prices and Real Effective Exchange Rates 
+author: Francis Kurian
+date: "12/13/2023"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
+bibliography: BibLaTex.bib
+csl: journal-of-the-royal-society-interface.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Abstract
+
+
+*This paper investigates the  relationship between stock market behavior and foreign exchange rates, particularly within the context of United States markets. Exchange rates emerge as pivotal factors influencing stock prices for listed companies, impacting export-import dynamics, profitability, and overall stock performance. Drawing from a comprehensive literature review, the study aims to validate existing findings and contribute fresh perspectives by leveraging the Bruegel Real Effective Exchange Rate database. Key objectives involve exploring time series properties, providing analytical insights, and offering perspectives for market participants. The findings reveal nuanced dynamics among variables, emphasizing the need for cautious interpretation. The study underscores the complexity of the relationship between stock prices and exchange rates and  offers insights for future research in this domain.*   
+
+## Introduction 
+
+### Stock Market Behavior and Exchange Rates
+
+The correlation between stock market prices and foreign exchange rates has attracted considerable attention in financial economics. In the context of United States markets, exchange rates play a pivotal role in shaping stock prices for listed companies, influencing export and import dynamics, profitability, and overall stock performance[@Miralles:2017] [@Eldomiaty:2020]. The observed sensitivity of stock prices to changes in exchange rates[@Ding:2021] introduces complexities with both positive and negative impacts on stock prices.
+
+A depreciation of the local currency lowers export costs and increase foreign demand  for exporting oriented firms. This positive effect contributes to an increase in the exporting firm's stock price. Conversely, an appreciating local currency diminishes profits for exporters due to a decrease in foreign demand. Importing firms, on the other hand, experience the opposite effect: an appreciating (depreciating) local currency amplifies (diminishes) their firm value. Additionally, fluctuations in exchange rates influence a firm's transaction exposure, affecting future payables (or receivables) denominated in foreign currency. For exporters, a stronger local currency leads to reduced profits, while a weaker currency results in increased profits.
+ 
+###  Quantification of Stock Market Behavior using  Exchange Rates  
+
+Many researchers have extensively explored the connection between exchange rates and stock prices[@Hussain:2023] [@Chkili:2014]. The literature delineates two explanatory models for the potential link between these variables: the "Flow Oriented Model," also known as the "Good Market Approach," and the "Stock Oriented Model" or "Portfolio Balance Approach."
+
+According to the "Flow Oriented Model" proposed by Dornbusch & Fischer in 1980[@Dornbusch:1980], stock prices are influenced by changes in the exchange rate. The rationale behind this assertion is that fluctuations in the exchange rate impact trade competitiveness, subsequently influencing real output and stock prices [@Phylaktis:2005].
+
+Conversely, the "Portfolio Balance Approach" or "Stock Oriented Model," presented by Branson and Henderson[@Branson:1985] and Frankel[@Frankel:1992], posits that stock prices affect the exchange rate. Empirical studies indicate that rising stock prices attract foreign investors, leading to increased stock purchases and, consequently, heightened demand in the domestic stock market. This surge in demand and capital inflow from abroad contributes to exchange rate depreciation [@Bashir:2016] [@Wong:2017].
+
+As highlighted by Adler and Dumas [@Adler:1984], even domestic firms with minimal international activities may encounter exchange rate exposure if their input prices, output prices, or product demand are influenced by exchange rate movements. Therefore, at a macro level, the impact of exchange rate fluctuations on stock prices appears to hinge on the significance of a country's international trades in its economy and the extent of the trade imbalance.
+
+The literature review help establish an analytical framework by examining data and results presented from various empirical studies. This study does not intend to replicate such extensive research. Instead, it aims to contribute to the understanding of the topic and data. To achieve this, we have formulated the following objectives.
+
+### Objectives
+
+1. Conduct a literature review on the behavior of stock markets in relation to exchange rates. Validate existing findings by leveraging the recently released Bruegel Real Effective Exchange Rate database encompassing data from 178 trading partner countries.
+
+2. Investigate the time series properties of the data sets, produce key insights through analysis, and offer analytics-driven perspectives for market participants.
+
+
+## Methodology and Data
+
+
+### Analysis System and Regression Model
+An R based interactive analysis system was developed to analyze the stock prices and various exchange rates at the company level. The design of the system allows analysts to select a specific company and conduct a thorough analysis of how stock prices respond to fluctuations in each currency. Multiple regression analysis and diagnostic tests will be produced  to understand the time properties better.  This study leverages on that system. 
+
+Ordinary Least Square Regression and corrections for non-stationary:
+
+$X_{i}$ are the $k$ independent variables and $Y$ is a dependent variable.The value of $Y$ is:
+\begin{equation}
+\large{Y_{t}= \alpha + \sum_{i=1}^{k-1} \beta_{i} X_{ti} + \beta_{k}Y_{t-1} + \epsilon_{t}}
+\end{equation}
+$\epsilon_{t}$ =Random Error Term
+$Y_{t-1}$ = lagged dependent variable to capture the trend
+
+Recognizing the non-stationary nature of Exchange Rates and Stock Market Prices, we also applied first-difference equations to model their dynamic behavior.
+
+\begin{equation}
+\large{\Delta Y_{t} = \alpha + \sum_{i=1}^k \beta_{i} \Delta X_{ti} + \epsilon_{t}}
+\end{equation}
+$\Delta Y$ =First Difference of Dependent Variable. $\Delta X_{ti}$ =First Difference of Explanatory Variable ${i}$. $\epsilon_{t}$ =Random Error Term \
+
+The Base model in this context can be specified as:
+\begin{equation}
+\begin{split}
+    \text{RealStockPrice} = &\beta_{0} + \beta_{1} \text{USADollar} + \beta_{2} \text{BrazilReal} \\
+    &+ \beta_{3} \text{ChinaYuan} + \beta_{4} \text{GermanyEuro} + \beta_{5} \text{UKPound} \\
+    &+ \beta_{6} \text{IndiaRupee} + \beta_{7} \text{JapanYen} + \beta_{8} \text{MexicoPeso}+ \beta_{9} \text{lag(RealStockPrice)}
+\end{split}
+\label{eq:g}
+\end{equation}
+
+### Diagnostics/tests conducted 
+
+1. **Residual Analysis/Diagnostics Plots:**
+   - *Residuals vs. Fitted Values:* Detects non-linearity in the model
+   - *Normal Q-Q Plot:* Checks the assumption of normality of residuals
+   - *Spread-Location Plot:* Checks the homogeneity of variances (homoscedasticity)
+   - *Cook's Distance Plot:* Identifies influential observations or outliers
+
+2. **Test of Stationarity: Dickey-Fuller Test Results:**
+  -  Augmented Dickey-Fuller test and P values to confirm the stationary of the every series
+  
+3. **Variance Inflation Factor(multicollinearity):**
+  - Variance Inflation Factor (VIF) is a measure of how much the variance of an estimated regression coefficient increases if your predictors are correlated. VIF values are used to identify multicollinearity in regression models. 
+
+4. **Johansen Cointegration Test:**
+  - Used to test the presence of cointegration among multiple time series variables. Cointegration is a statistical property that suggests a long-term relationship among variables, even if they individually follow random walks. 
+
+5. **Step-wise Regression:**
+  - Step-wise regression model iteration was done to find out the best fitting model for a company and selection was based on lowest AIC. Akaike Information Criterion, is a measure of the relative quality of a statistical model for a given set of data.The AIC score takes into account the goodness of fit of the model and penalizes models that have more parameters
+
+### Data Collection and Profiling
+
+Weighted, inflation-adjusted exchange rates-REER-data collected from Data-is-Plural.com is a research effort that needs a special mention.Bruegel, a research organization, compiled this data on exchange rates and consumer price indices and the weighting matrix used was originally derived by Bayoumi, Lee and Jaewoo to calculate consumer price index-based REER. A country’s real effective exchange rate is its average exchange rate with its trading partners, weighted by trade volume and adjusted for inflation. Economist Zsolt Darvas maintains a dataset that estimates these rates for 178 countries and the eurozone, by month and year. The project, which updates a dataset and methodology Darvas first published in 2012, uses data from international organizations, national statistics offices, and central banks.This new database is significantly better than any other publicly available database.   
+Monthly data was collected for a period of ten years (01-OCT-2013 to 30-SEP-2023) for the following data series. Real Effective Exchange Rate(REER)[@plural], Stock Prices[@yahoo] and Consumer Price Index[@fed].The following graphs show a profile of data used throughout the study. 
+
+## Temporal Evolution of Real Effective Exchange Rates Across Selected Countries
+
+```{r fig1.1, echo=FALSE, warning=FALSE, message=FALSE, fig.width=7, fig.height=6}
+# # Loads required packages
+library(shiny)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(sjPlot)
+library(sjmisc)
+library(ggfortify)
+library(urca)
+library(tseries)
+library(knitr)
+#library(kableExtra)
+library(gridExtra)
+library(gt)
+
+setwd("/Users/francis/Library/CloudStorage/OneDrive-Personal/Documents/chapman/CS 614/FinalProject/code/")
+df <- read.csv("forex_level.csv")
+
+# Filter data for "Genpact Ltd"
+filtered_df <- df %>% filter(company_name == "Genpact Ltd")
+
+# Define the fields to plot
+fields_to_plot <- c("USA_Dollar", "Brazil_Real", "China_Yuan", 
+                    "Germany_Euro", "UK_Pound", "India_Rupee", 
+                    "Japan_Yen", "Mexico_Peso")
+# Create a list of ggplot objects for each field
+filtered_df$Date <- as.Date(filtered_df$Date, format = "%Y-%m-%d")
+
+plots <- lapply(fields_to_plot, function(field) {
+  ggplot(filtered_df, aes(x = Date, y = !!sym(field))) +
+    geom_line() +
+    labs( x = "", y = field) +
+    theme_minimal()
+})
+grid.arrange(grobs = plots, ncol = 2)
+#cat("Table 1: Visulization of Real Effective Exhange Rate of select countries over time. \n")
+```
+
+In general, diverse time series data reveal volatility in response to events within respective domestic countries. 2015 devaluation of currency in China, 2016 BREXIT vote in Europe and 2015 NAFTA renegotiation in Mexico are well reflected in the graph. Chinese devaluation also dragged already troubled Latin American economies down. The USA and India exhibit closer tracking, as do the UK and Germany.Taking these observations into account, the data serves as a foundation for subsequent analysis.
+
+## Real Stock Market Price Bahavior Across Selected Companies
+
+```{r fig1.2, echo=FALSE, warning=FALSE, message=FALSE, fig.width=8, fig.height=8}
+df$Date <- as.Date(df$Date, format = "%Y-%m-%d")
+fields_to_plot <- unique(df$company_name)
+plots <- lapply(fields_to_plot, function(company) {
+  df_subset <- df %>% filter(company_name == company)
+  
+  ggplot(df_subset, aes(x = Date, y = Real_Stock_Price)) +
+    geom_line() +
+    labs(title = paste("", company),
+         x = "", y = "Real Stock Price") +
+    theme_minimal()
+})
+grid.arrange(grobs = plots, ncol = 2)
+#cat("Table 2: Visulization of Real Stock Market Price Behavior of select companies over time. \n")
+```
+
+Stock price behavior varies significantly among companies, with major fluctuations often attributed to earnings statements and news impacting future profitability. The  impact of the Covid-19 pandemic in 2020 is evident in traditionally stable stocks like Boeing and First Energy.Challenge will be to delineate the responses to exchage rate fluctuations.
+
+### Research Data & Code: Open Science Compliance
+R code developed for data extraction and analysis and data sets used for this validation exercises are archived in a public github repository.Reproducible package can be downloaded using the link provided in the reference section.[@510github]  
+
+\newpage
+## Model Validation and Analysis at Company Level
+
+
+### Data Diagnostics-A Sample of Baidu Inc
+
+```{r fig2.3, echo=FALSE, warning=FALSE, message=FALSE, fig.width=8, fig.height=8}
+df <- read.csv("forex_level.csv")
+
+filtered_df <- df %>% filter(company_name == "Baidu Inc")
+
+x_vars <- c(
+  "USA_Dollar", "Brazil_Real", "China_Yuan",
+  "Germany_Euro", "UK_Pound", "India_Rupee",
+  "Japan_Yen", "Mexico_Peso"
+)
+ggplots <- lapply(x_vars, function(x_var) {
+  ggplot(filtered_df, aes_string(x = x_var, y = "Real_Stock_Price")) +
+    geom_point() +
+    geom_smooth(method = "lm", se = FALSE, color = "blue") +
+    theme_minimal() +
+    theme(plot.margin = margin(10, 10, 10, 10))  # Adjust margins as needed
+})
+
+# Calculate the number of rows and columns dynamically
+num_plots <- length(ggplots)
+num_cols <- 2
+num_rows <- ceiling(num_plots / num_cols)
+
+# Arrange the plots using ggarrange in two columns
+# Arrange the plots using ggarrange in two columns
+scatter_arranged <- ggarrange(plotlist = ggplots, ncol = num_cols, nrow = num_rows)
+
+# Add a title and caption using annotate_figure
+scatter_arranged <- annotate_figure(scatter_arranged,
+  top = text_grob("Scatter Plots: Stock Prices and Exchange Rates", color = "gray", face = "bold", size = 12),
+  bottom = text_grob("", color = "gray", face = "italic", size = 10)
+)
+
+# Return the arranged plot
+scatter_arranged
+
+
+```
+In the scatterplot diagram comparing Baidu Inc.'s stock prices with exchange rates, a distinct negative slope is evident for the relationship between Baidu's stock prices and the exchange rate for the USA. This suggests that as the exchange rate for the USA increases, Baidu's stock prices tend to exhibit a negative trend.  These patterns highlight the potential impact of currency fluctuations on Baidu's stock performance in these respective markets.
+
+```{r fig2.4, echo=FALSE, warning=FALSE, message=FALSE, fig.width=8, fig.height=8}
+
+  multi.fit <- lm(Real_Stock_Price ~ USA_Dollar + Brazil_Real + China_Yuan +
+                    Germany_Euro + UK_Pound + India_Rupee + Japan_Yen + Mexico_Peso + lag(Real_Stock_Price),
+                  data = filtered_df)
+  autoplot(multi.fit)
+
+```
+The diagnostic plots can help examine the following key assumptions:
+
+1. **Linearity:** The Residuals vs. Fitted Values plot helps identify non-linear patterns, which may indicate issues with the linearity assumption.
+
+2. **Normality of Residuals:** The Normal Q-Q plot assesses whether the residuals are approximately normally distributed. Deviations from a straight line in this plot may suggest departures from normality.
+
+3. **Homoscedasticity:** The Scale-Location (or Spread-Location) plot helps check whether the spread of residuals is constant across different levels of fitted values. A consistent spread is an indication of homoscedasticity.
+
+4. **Influence and Outliers:** The Residuals vs. Leverage plot, often displaying Cook's distance, helps identify influential observations and potential outliers that may have a substantial impact on the model.
+
+\newpage
+
+### Baseline Regression Model Summary
+```{r fig2.1, echo=FALSE, warning=FALSE, message=FALSE, fig.width=7, fig.height=4}
+get_regression_statistics <- function(company) {
+  # Filter the data for the specified company
+  filtered_df <- df %>% filter(company_name == company)
+  
+  # Fit a multiple linear regression model
+  multi.fit <- lm(Real_Stock_Price ~ USA_Dollar + Brazil_Real + China_Yuan +
+                    Germany_Euro + UK_Pound + India_Rupee + Japan_Yen + Mexico_Peso+ lag(Real_Stock_Price),
+                  data = filtered_df)
+  
+  # Perform stepwise regression
+  capture.output(final_model <- step(multi.fit, direction = "both"))
+  final_model_formula <- formula(final_model)
+  
+  # Fit the final model
+  final.fit <- lm(final_model_formula, data = filtered_df)
+  
+  # Collect summary statistics
+  summary_stats <- summary(final.fit)
+  
+  # Extract necessary information for table a
+  table_a <- data.frame(
+    Company = company,
+    R2 = summary_stats$r.squared,
+    Adj_R2 = summary_stats$adj.r.squared,
+    F = summary_stats$fstatistic[1],
+    Prob_F = summary_stats$fstatistic[2]
+  )
+  
+  # Extract necessary information for table b
+  table_b <- data.frame(
+    Company = company,
+    Variables = names(coef(final.fit)),
+    Estimates = coef(final.fit),
+    T_Value = summary_stats$coefficients[, "t value"],
+    Prob_T_Value = summary_stats$coefficients[, "Pr(>|t|)"]
+  )
+  
+  return(list(table_a = table_a, table_b = table_b))
+}
+
+
+# Apply the function for each unique company_name
+df <- read.csv("forex_level.csv")
+unique_companies <- unique(df$company_name)
+result_tables <- lapply(unique_companies, get_regression_statistics)
+
+
+result_table_a_all <- data.frame()
+result_table_b_all <- data.frame()
+
+# Loop over unique companies
+for (i in seq_along(unique_companies)) {
+  company_of_interest <- unique_companies[i]
+  
+  # Access the result tables for the specified company
+  result_table_a <- result_tables[[i]]$table_a
+  result_table_b <- result_tables[[i]]$table_b
+  
+  # Add a column for company name
+  result_table_a$Company <- company_of_interest
+  result_table_b$Company <- company_of_interest
+  
+  # Bind the results to the overall dataframes
+  result_table_a_all <- rbind(result_table_a_all, result_table_a)
+  result_table_b_all <- rbind(result_table_b_all, result_table_b)
+}
+
+# Print the formatted table
+kable(result_table_a_all, format = "markdown", digits = 2, row.names = FALSE, caption = " This table summarizes the stepwise regression model run for various businesses using model 1. The best equation was selected based on lowest AIC. R-Square value shows good fit for all companies")
+kable(result_table_b_all, format = "markdown", digits = 2, row.names = FALSE, caption = " Best Models selected for each company based on stepwise regression. List of coefficients,  P values and its significance are reported")
+```
+The close examination of the tables shows that across all cases, lagged values of the dependent variable exhibit positive and significant associations, indicating the presence of autocorrelation or time dependence in the data. First Energy stands out as the only company whose stock price shows a positive correlation with changes in exchange rates for any currency. Specifically, Baidu, Genpact, and Google demonstrate a  positive relationship with the Indian Rupee, while Kraft shows a similar connection with the UK Pound. However, the majority of stock prices exhibit predominantly negative associations with exchange rates.We will discuss the mixed results in the summary section of the paper.
+\newpage
+
+### Difference Regression Model Summary
+```{r fig2.2, echo=FALSE, warning=FALSE, message=FALSE, fig.width=7, fig.height=4}
+get_regression_statistics <- function(company) {
+  # Filter the data for the specified company
+  filtered_df <- df %>% filter(company_name == company)
+  
+  # Fit a multiple linear regression model
+  multi.fit <- lm(Real_Stock_Price ~ USA_Dollar + Brazil_Real + China_Yuan +
+                    Germany_Euro + UK_Pound + India_Rupee + Japan_Yen + Mexico_Peso,
+                  data = filtered_df)
+  
+  # Perform stepwise regression
+  capture.output(final_model <- step(multi.fit, direction = "both"))
+  final_model_formula <- formula(final_model)
+  
+  # Fit the final model
+  final.fit <- lm(final_model_formula, data = filtered_df)
+  
+  # Collect summary statistics
+  summary_stats <- summary(final.fit)
+  
+  if (!is.null(summary_stats) && "r.squared" %in% names(summary_stats) &&
+      "adj.r.squared" %in% names(summary_stats) &&
+      "fstatistic" %in% names(summary_stats)) {
+    
+    # Extract necessary information for table a
+    table_a <- data.frame(
+      Company = company,
+      R2 = summary_stats$r.squared,
+      Adj_R2 = summary_stats$adj.r.squared,
+      F = summary_stats$fstatistic[1],
+      Prob_F = summary_stats$fstatistic[2]
+    )
+    
+    # Extract necessary information for table b
+    table_b <- data.frame(
+      Company = company,
+      Variables = names(coef(final.fit)),
+      Estimates = coef(final.fit),
+      T_Value = summary_stats$coefficients[, "t value"],
+      Prob_T_Value = summary_stats$coefficients[, "Pr(>|t|)"]
+    )
+    
+    return(list(table_a = table_a, table_b = table_b))
+    
+  } else {
+    # Handle the case where summary_stats is empty or missing necessary information
+    #cat("Summary statistics are missing or empty for", company, "\n")
+    return(NULL)
+  }
+}
+
+# Apply the function for each unique company_name
+df <- read.csv("forex_difference.csv")
+unique_companies <- unique(df$company_name)
+result_tables <- lapply(unique_companies, get_regression_statistics)
+
+result_table_a_all <- data.frame()
+result_table_b_all <- data.frame()
+
+# Loop over unique companies
+for (i in seq_along(result_tables)) {
+  company_of_interest <- unique_companies[i]
+  
+  # Check if result_tables[i] is not NULL
+  if (!is.null(result_tables[[i]])) {
+    # Access the result tables for the specified company
+    result_table_a <- result_tables[[i]]$table_a
+    result_table_b <- result_tables[[i]]$table_b
+    
+    # Add a column for company name
+    result_table_a$Company <- company_of_interest
+    result_table_b$Company <- company_of_interest
+    
+    # Bind the results to the overall dataframes
+    result_table_a_all <- rbind(result_table_a_all, result_table_a)
+    result_table_b_all <- rbind(result_table_b_all, result_table_b)
+  }
+}
+
+# Print the formatted table
+kable(result_table_a_all, format = "markdown", digits = 2, row.names = FALSE, caption = " This table summarizes the stepwise regression model run for various businesses using model2. The best equation was selected based on lowest AIC. R-Square value shows poor fit")
+kable(result_table_b_all, format = "markdown", digits = 2, row.names = FALSE, caption = " Best equations selected for each company based on stepwise regression. List of coefficients,  P values and its significance are reported")
+
+
+```
+The model 2 was performed on first differences and ADF test shows all series are stationary after that. Model performance is poor as demonstrated by R Square values. We will discuss the possible reasons in the summary section of the paper.
+
+### Tests for Stationarity and Cointegration
+
+![Dickey Fuller and Johansen Cointegration Tests Summary](adf.png){width=100%}
+As expected all of the exchange rates and dependent variables are non stationary. However, some cointegration was expected at levels but none was found. Numbers on the right side are generated after the first difference of the varrables and that resulted in all stationary variables. Surprisingly, cointegration was found at 1% level for eight vectors. This opens up several questions on the data series and need to further investigate the time series properties and exploring a better model to accommodate such properties.
+
+\newpage
+
+## Summary and Conclusion
+
+We began this study with a literature review on  how stock prices and exchange rates are connected. Then, we tried to do similar analyses using different regression models. Since many studies have already explored various aspects of this topic, our findings mostly match what others have discovered. However, it's important to mention that our study only scratched the surface of time series analysis. Also drawing firm conclusions and linking our findings to established studies would be risky, given our limited exploration of the specific drivers behind this behavior at the company level. In the following sections, we will  take a closer look at what we found during our analysis.
+In comparing two regression models (Model 1 and Model 2), we found that Model 1, incorporating a one-period lagged dependent variable, outperformed Model 2, which involved differencing. The addition of the lagged dependent variable had a positive and significant impact, reducing model error.  Additionally, introducing the lagged variable helped capture trends in the non-stationary series. For most companies we examined, the R-squared values exceeded 90%, indicating a high ability of the model to explain variations. 
+The Variance Inflation Factor (VIF) for most variables was below the threshold, except for the US Dollar, which exhibited high multicollinearity with some currencies.US Dollar's close correlation with many currencies was expected due to its international settlement currency status.Surprisingly, no cointegration was detected at levels, contrary to the nature of the data series.Model 2 performed poorly in terms of explanatory power, but it showed no multicollinearity, and all series were stationary. The variables used were found to be cointegrated up to eight vectors, signaling  some interesting dynamics in the relationships among them. However, this was not explored further.
+
+When we studied the results for 10 businesses, the results were  mixed because each business has varying degrees of global exposures. We noticed a common trend: export oriented businesses tend to have lower stock prices when exchange rates are stronger. Boeing, General Electric for example. This happens because a stronger exchange rate can decrease their earnings and make their products and services cheaper abroad. However, there were interesting exceptions that can help people in the market understand important patterns. For instance, First Energy was a company whose stock prices were positively related to exchange rate changes, regardless of the currency. Additionally, Baidu, Genpact, and Google did well when the Indian Rupee was strong indicating the stronger technology ties.  Kraft Heinz did well when the UK Pound was strong. We have not explored the factors influencing these relationships beyond the available data. Questions such as the proportion  of the business that gains from exports or utilizes low-cost inputs from imports would enhance the study's conclusiveness in connecting with foreign exchange rates.
+
+
+## Future Research
+
+This study represents an initial exploration into the  time series analysis, highlighting several issues that require attention. Non-linear relationships are evident in scatter plots of multiple companies, suggesting the potential need for transforming model variables to address these complexities. The issue of non-stationarity was not adequately addressed in the initial model, and although differencing was a commonly employed strategy, it did not yield the desired results in the second model. Future research could look  into more advanced models such as Autoregressive Integrated Moving Average (ARIMA) or Seasonal-Trend decomposition to enhance our understanding. Additionally, the presence of significant cointegration is evident and requires more attention. Investigating cointegration further may lead to the development of improved error correction mechanisms or more sophisticated models.
+  
+
+\newpage
+## References 
