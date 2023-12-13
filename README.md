@@ -11,3 +11,16 @@ Steps:
 3. All files from 'Doc' Folder
 Keep all of them in one directory and run the RMD file. The PDF will be generated. running forex_analysis_v1.R is optional as the two output file in this step are included in the data files
 
+
+For Interactive Analytics ShinyApp:
+
+1. Copy the following codes
+  
+   * ShinyApp_project.R
+   * ShinyApp_Project_Part2.R
+   * combined.R
+2. two data files from 'Data' folder are required:
+   * forex_level.csv
+   * forex_difference.csv
+  
+In both cases, copying all of the files into current working directory will avoid troubles in directory changes.
